@@ -10,7 +10,7 @@ const eventCallback = event => {
     const query = queryEl.value;
 
 
-    fetch(`https://api.unsplash.com/search/photos/?client_id=aoY1Nj_WIbaZG1De7H_D_Q_HOJvrsAqnBHufRc4Dv68&query=${query}`)
+    fetch(`https://api.unsplash.com/search/photos/?client_id=aoY1Nj_WIbaZG1De7H_D_Q_HOJvrsAqnBHufRc4Dv68&query=${query}&orientation=squarish`)
         .then(response => response.json())
         .then(json => {
 
@@ -36,7 +36,10 @@ const eventCallback = event => {
                 // TODO: adddescription
                 // const description = card.description
                 const image = document.createElement("img")
+                
                 image.src = thumbUrl
+                image.classList.add('img-thumbnail')
+                
 
                 contentEl.appendChild(image)
             });
