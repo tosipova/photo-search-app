@@ -3,34 +3,54 @@ const queryEl = document.querySelector("#query")
 const mainContent = document.querySelector("#result")
 
 
+const API_KEY = 'aoY1Nj_WIbaZG1De7H_D_Q_HOJvrsAqnBHufRc4Dv68';
+const API_URL = 'https://api.unsplash.com/search/photos/'
+const ORIENTATION = 'squarish';
+let perPage = 5;
+
 const eventCallback = event => {
     event.preventDefault();
     const query = queryEl.value;
-    fetch(`https://api.unsplash.com/search/photos/?client_id=aoY1Nj_WIbaZG1De7H_D_Q_HOJvrsAqnBHufRc4Dv68&query=${query}&orientation=squarish`)
+    const fullApiUrl = `${API_URL}?client_id=${API_KEY}&query=${query}&orientation=${ORIENTATION}&per_page=${perPage}`;
+
+    fetch(fullApiUrl)
         .then(response => response.json())
         .then(json => {
-            const cards = json.results.slice(0, 5);
+            const cards = json.results;
 
             mainContent.innerHTML = ""
             queryEl.value = ""
         
             cards.forEach(card => {
                 const parent = document.createElement("div")
-                const title = document.createElement("div")
+                const cardBody = document.createElement("div")
+                const title = document.createElement("h5")
+                const description = document.createElement("p")
                 const image = document.createElement("img")
                 
-                title.innerHTML = card.alt_description
+                description.innerHTML = card.alt_description
+                title.innerHTML = card.description
                 image.src = card.urls.thumb
-                image.classList.add('img-thumbnail')
+                
+                parent.classList.add('card')
+                cardBody.classList.add('card-body')
+                title.classList.add('card-title')
+                description.classList.add('card-text')
+                image.classList.add('card-img-top')
 
-                parent.appendChild(title)
+                parent.appendChild(cardBody)
                 parent.appendChild(image)
-                mainContent.appendChild(parent)
 
+                // Добавить только, если description
+                cardBody.appendChild(title)
+
+                cardBody.appendChild(description)
+                mainContent.appendChild(parent)
             });
 
         })
 };
+
 searchFormEl.addEventListener("submit", eventCallback);
 
 
