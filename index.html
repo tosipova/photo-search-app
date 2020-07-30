@@ -15,11 +15,26 @@
 
         <div class="container">
             <form id="search-form" class="form form-inline">
-                <input id="query" class="form-control mb-2 mr-sm-2" type="text">
+                <input id="query" class="form-control mb-2 mr-sm-2" type="text" value='dog'>
                 <button class="btn btn-primary mb-2 mr-sm-2"> Search photo </button>
             </form>
 
-            <div id="result"></div>
+            <div id="results">
+
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        <li class="page-item">
+                    </ul>
+                </nav>
+
+            </div>
+
         </div>
 
         <script src="./index.js"></script>
