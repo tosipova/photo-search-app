@@ -10,7 +10,7 @@ const ORIENTATION = 'squarish';
 const PER_PAGE = 1;
 
 
-let page = 1;
+let currentPage = 1;
 let query = '';
 searchFormEl.defaultValue = "dog"
 
@@ -18,12 +18,13 @@ searchFormEl.defaultValue = "dog"
 const submitFormCallback = event => {
     event.preventDefault();
     query = queryEl.value;
-    page = 1;
+    currentPage = 1;
 
     fetchPhotos()
 }
 
 const onPaginationClickCallback = event => {
+    event.preventDefault();
     const paginationEls = document.querySelectorAll('.page-item');
     // ['<li class="page-item active"><a class="page-link" href="#">1</a></li>',
     //  '<li class="page-item active"><a class="page-link" href="#">2</a></li>',
@@ -33,13 +34,12 @@ const onPaginationClickCallback = event => {
     })
 
     // event.target === <a class="page-link" href="#">2</a>
-    page = Number(event.target.innerText);
+    currentPage = Number(event.target.innerText);
     event.target.parentNode.classList.add('active');
     // <li class="page-item active"><a class="page-link" href="#">2</a></li>
-
-
-
     fetchPhotos()
+
+
 }
 
 searchFormEl.addEventListener("submit", submitFormCallback);
@@ -49,7 +49,7 @@ paginationEl.addEventListener("click", onPaginationClickCallback);
 
 function fetchPhotos() {
     const preFixUrl = `${API_URL}?client_id=${API_KEY}&query=${query}&orientation=${ORIENTATION}`;
-    const fullApiUrl = `${preFixUrl}&per_page=${PER_PAGE}&page=${page}`;
+    const fullApiUrl = `${preFixUrl}&per_page=${PER_PAGE}&page=${currentPage}`;
 
 
     fetch(fullApiUrl)
@@ -74,13 +74,52 @@ function fetchPhotos() {
             //     <a class="page-link" href="#">3</a>
             // </li>
 
-            
-            paginationEl.insertAdjacentHTML('beforeend', `
-                <li class="page-item">
+
+            // Add id to .page-item
+            // Select element by id
+            // Check if exists
+            // => render
+
+            // Add id to next -page
+            // Select  next page by id
+            // Compare total pages with current page ; true ( when total pages === current page) // false if otherwise
+            // If true hide, if false is show
+
+            const totalPagesEl = document.querySelector("#total-pages"); // null || el
+            const nextPageEl = document.querySelector("#next-page")
+            const firstPageEl = document.querySelector("#first-page")
+
+            if (!totalPagesEl) { // !null => true || !el => false
+                paginationEl.insertAdjacentHTML('beforeend', `
+                <li>
+                    ...
+                </li>
+                <li class="page-item" id="total-pages">
                     <a class="page-link" href="#">${totalPages}</a>
                 </li>
             `)
+            }
 
+            if (totalPages === currentPage) {
+                nextPageEl.classList.add('d-none');
+            } else {
+                nextPageEl.classList.remove('d-none');
+            }
+            if (currentPage === 1){
+                firstPageEl.classList.add('d-none')
+            } else {
+                firstPageEl.classList.remove('d-none')
+            }
+
+            // 
+            
+            // add id previous el
+            // select previouse page by id
+            // if current page === 1 then true 
+            //  if true then  hide element (with class) 
+
+
+           
 
             mainContent.innerHTML = ""
             queryEl.value = ""
