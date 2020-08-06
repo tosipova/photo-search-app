@@ -19,27 +19,65 @@ const submitFormCallback = event => {
     event.preventDefault();
     query = queryEl.value;
     currentPage = 1;
+    paginationEl.classList.remove("d-none")
 
     fetchPhotos()
 }
 
 const onPaginationClickCallback = event => {
     event.preventDefault();
+
+    const paginationTextValue = event.target.innerText;
     const paginationEls = document.querySelectorAll('.page-item');
-    // ['<li class="page-item active"><a class="page-link" href="#">1</a></li>',
-    //  '<li class="page-item active"><a class="page-link" href="#">2</a></li>',
-    //  '<li class="page-item active"><a class="page-link" href="#">3</a></li>']
+
+    // Make current page button not a link === Не делать запрос, если страница не изменилась
+    if (Number(paginationTextValue) === currentPage) {
+        return;
+    };
+
     [...paginationEls].forEach(el => {
         el.classList.remove('active')
     })
 
-    // event.target === <a class="page-link" href="#">2</a>
-    currentPage = Number(event.target.innerText);
-    event.target.parentNode.classList.add('active');
-    // <li class="page-item active"><a class="page-link" href="#">2</a></li>
-    fetchPhotos()
+
+    if (paginationTextValue === 'Previous') {
+        currentPage--
+
+        // Найти элемент .page-item со страницей currentPage--
+        // Добавить .active
+
+        const currentPageEl = [...paginationEls].find(el => {
+            return el.textContent.includes(currentPage);
+        });
+        currentPageEl.classList.add('active');
+
+    } else if (paginationTextValue === 'Next') {
+        currentPage++
+
+        const currentPageEl = [...paginationEls].find(el => {
+            return el.textContent.includes(currentPage);
+        });
+
+        if (currentPageEl) {
+            currentPageEl.classList.add('active');
+        }
+    }
+    else {
+        currentPage = Number(paginationTextValue);
+        event.target.parentNode.classList.add('active');
+    }
 
 
+    // Где мы находимся прямо сейчас?
+    // currentPage = 1
+    // Как понять что мы хотим перейти назад?
+    // console.log(event.target.innerText);
+    // Как получить страницу на которую мы хотим перейти?
+    // currentPage = currentPage - 1
+    // currentPage -= 1
+    // currentPage
+
+    fetchPhotos();
 }
 
 searchFormEl.addEventListener("submit", submitFormCallback);
@@ -105,21 +143,22 @@ function fetchPhotos() {
             } else {
                 nextPageEl.classList.remove('d-none');
             }
-            if (currentPage === 1){
+
+            if (currentPage === 1) {
                 firstPageEl.classList.add('d-none')
             } else {
                 firstPageEl.classList.remove('d-none')
             }
 
             // 
-            
+
             // add id previous el
             // select previouse page by id
             // if current page === 1 then true 
             //  if true then  hide element (with class) 
 
 
-           
+
 
             mainContent.innerHTML = ""
             queryEl.value = ""
