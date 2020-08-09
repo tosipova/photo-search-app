@@ -3,32 +3,44 @@ const queryEl = document.querySelector("#query")
 const mainContent = document.querySelector("#results")
 const paginationEl = document.querySelector('#pagination');
 
-
 const API_KEY = 'aoY1Nj_WIbaZG1De7H_D_Q_HOJvrsAqnBHufRc4Dv68';
 const API_URL = 'https://api.unsplash.com/search/photos/'
 const ORIENTATION = 'squarish';
 const PER_PAGE = 1;
 
-
 let currentPage = 1;
 let query = '';
-searchFormEl.defaultValue = "dog"
+searchFormEl.defaultValue = ""
 
+//  if searchformEl is null then hide pagination
+// where should it be?
 
-const submitFormCallback = event => {
+// 3)  if we are on  currentPage the show currentPage;currentpage+1;currentPage+2
+
+const submitFormCallback = (event) => {
     event.preventDefault();
     query = queryEl.value;
     currentPage = 1;
-    paginationEl.classList.remove("d-none")
 
-    fetchPhotos()
+    console.log(JSON.stringify(queryEl))
+    if (!query) {
+        console.log("you did not typed anything, we will not fetch photos not show pagination")
+        mainContent.innerHTML = ""
+        paginationEl.classList.add('d-none');
+    } else {
+        paginationEl.classList.remove('d-none');
+        fetchPhotos()
+    }
 }
 
-const onPaginationClickCallback = event => {
+const onPaginationClickCallback = (event) => {
     event.preventDefault();
 
     const paginationTextValue = event.target.innerText;
+
     const paginationEls = document.querySelectorAll('.page-item');
+
+
 
     // Make current page button not a link === Не делать запрос, если страница не изменилась
     if (Number(paginationTextValue) === currentPage) {
@@ -38,7 +50,6 @@ const onPaginationClickCallback = event => {
     [...paginationEls].forEach(el => {
         el.classList.remove('active')
     })
-
 
     if (paginationTextValue === 'Previous') {
         currentPage--
@@ -63,6 +74,7 @@ const onPaginationClickCallback = event => {
         }
     }
     else {
+
         currentPage = Number(paginationTextValue);
         event.target.parentNode.classList.add('active');
     }
@@ -81,9 +93,7 @@ const onPaginationClickCallback = event => {
 }
 
 searchFormEl.addEventListener("submit", submitFormCallback);
-
 paginationEl.addEventListener("click", onPaginationClickCallback);
-
 
 function fetchPhotos() {
     const preFixUrl = `${API_URL}?client_id=${API_KEY}&query=${query}&orientation=${ORIENTATION}`;
@@ -93,35 +103,6 @@ function fetchPhotos() {
     fetch(fullApiUrl)
         .then(response => response.json())
         .then(({ results: cards, total_pages: totalPages }) => {
-
-            // json.results;
-            // json.total_pages
-
-            // =>
-            // const { results, total_pages } = json;
-            // const cards = results;
-            // const totalPages = total_pages;
-            // cards,totalPages, results, total_pages
-
-            // => 
-            // const { results: cards, total_pages: totalPages } = json;
-            // cards, totalPages
-
-            // totalPages
-            // <li class="page-item">
-            //     <a class="page-link" href="#">3</a>
-            // </li>
-
-
-            // Add id to .page-item
-            // Select element by id
-            // Check if exists
-            // => render
-
-            // Add id to next -page
-            // Select  next page by id
-            // Compare total pages with current page ; true ( when total pages === current page) // false if otherwise
-            // If true hide, if false is show
 
             const totalPagesEl = document.querySelector("#total-pages"); // null || el
             const nextPageEl = document.querySelector("#next-page")
@@ -149,16 +130,6 @@ function fetchPhotos() {
             } else {
                 firstPageEl.classList.remove('d-none')
             }
-
-            // 
-
-            // add id previous el
-            // select previouse page by id
-            // if current page === 1 then true 
-            //  if true then  hide element (with class) 
-
-
-
 
             mainContent.innerHTML = ""
             queryEl.value = ""
