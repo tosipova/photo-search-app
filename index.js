@@ -11,9 +11,12 @@ const PER_PAGE = 1;
 let currentPage = 1;
 let query = '';
 searchFormEl.defaultValue = ""
+queryEl.focus()
 
 //  if searchformEl is null then hide pagination
 // where should it be?
+
+// if query changed then 
 
 // 3)  if we are on  currentPage the show currentPage;currentpage+1;currentPage+2
 
@@ -24,7 +27,6 @@ const submitFormCallback = (event) => {
 
     console.log(JSON.stringify(queryEl))
     if (!query) {
-        console.log("you did not typed anything, we will not fetch photos not show pagination")
         mainContent.innerHTML = ""
         paginationEl.classList.add('d-none');
     } else {
@@ -36,11 +38,8 @@ const submitFormCallback = (event) => {
 const onPaginationClickCallback = (event) => {
     event.preventDefault();
 
-    const paginationTextValue = event.target.innerText;
-
+    const paginationTextValue = event.target.innerText; // text of the clicked link
     const paginationEls = document.querySelectorAll('.page-item');
-
-
 
     // Make current page button not a link === Не делать запрос, если страница не изменилась
     if (Number(paginationTextValue) === currentPage) {
@@ -74,11 +73,9 @@ const onPaginationClickCallback = (event) => {
         }
     }
     else {
-
         currentPage = Number(paginationTextValue);
         event.target.parentNode.classList.add('active');
     }
-
 
     // Где мы находимся прямо сейчас?
     // currentPage = 1
@@ -99,16 +96,16 @@ function fetchPhotos() {
     const preFixUrl = `${API_URL}?client_id=${API_KEY}&query=${query}&orientation=${ORIENTATION}`;
     const fullApiUrl = `${preFixUrl}&per_page=${PER_PAGE}&page=${currentPage}`;
 
-
     fetch(fullApiUrl)
         .then(response => response.json())
         .then(({ results: cards, total_pages: totalPages }) => {
 
-            const totalPagesEl = document.querySelector("#total-pages"); // null || el
-            const nextPageEl = document.querySelector("#next-page")
             const firstPageEl = document.querySelector("#first-page")
-
+            const nextPageEl = document.querySelector("#next-page")
+            const totalPagesEl = document.querySelector("#total-pages"); // null || el
+       
             if (!totalPagesEl) { // !null => true || !el => false
+                console.log("generating last page")
                 paginationEl.insertAdjacentHTML('beforeend', `
                 <li>
                     ...
@@ -117,6 +114,9 @@ function fetchPhotos() {
                     <a class="page-link" href="#">${totalPages}</a>
                 </li>
             `)
+            } else {
+
+                totalPagesEl.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`
             }
 
             if (totalPages === currentPage) {

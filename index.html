@@ -14,28 +14,22 @@
     <body>
 
         <div class="container">
+
             <form id="search-form" class="form form-inline">
                 <input id="query" class="form-control mb-2 mr-sm-2" type="text">
                 <button class="btn btn-primary mb-2 mr-sm-2"> Search photo </button>
             </form>
 
-            <div id="results"></div>
-
             <nav>
                 <ul id="pagination" class="pagination d-none">
                     <li class="page-item" id="first-page"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item active">
-                        <a class="page-link" href="#">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">3</a>
-                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
                     <li class="page-item" id="next-page"><a class="page-link" href="#">Next</a></li>
+                </ul>
             </nav>
-
+            <div id="results"></div>
         </div>
 
         <script src="./index.js"></script>
